@@ -57,5 +57,5 @@ function verificarBordes(n, m) {
     console.log("borde derecho");
   }
 }
-
+//a
 recorrido();
