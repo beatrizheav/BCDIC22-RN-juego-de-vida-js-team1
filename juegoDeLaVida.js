@@ -24,31 +24,36 @@ console.table(myarray);
 function recorrido() {
   for (let n = 0; n < fila; n++) {
     for (let m = 0; m < columnas; m++) {
-      vecinos(n, m);
+      ubicacion(n, m);
     }
   }
 }
 
-function vecinos(n, m) {
-  if (myarray[n][m] === ".") {
-    console.log("muerta");
-    // return "muerta";
-  } else console.log("viva");
-  // else return "viva";
-  verificarBordes(n, m);
-}
+// function vecinos(n, m) {
+//   if (myarray[n][m] === ".") {
+//     // console.log("muerta");
+//     // return "muerta";
+//   } else {}//console.log("viva"); 
+//   // else return "viva";
+//   verificarBordes(n, m);
+// }
 
-function verificarBordes(n, m) {
+function ubicacion(n, m) {
   if (n == 0 && m == 0) {
     console.log("esquina superior izquierda");
+    esquinaSupIzq(n,m);
   } else if (n == 0 && m == columnas - 1) {
     console.log("esquina superior derecha");
+    esquinaSupDer(n,m);
   } else if (n == fila - 1 && m == 0) {
     console.log("esquina inferior izquierda");
+    esquinaInfIzq(n,m);
   } else if (n == fila - 1 && m == columnas - 1) {
     console.log("esquina inferior derecha");
+    esquinaInfDer(n,m);
   } else if (n == 0) {
     console.log("es borde superior");
+    borderSup(n,m);
   } else if (n == fila - 1) {
     console.log("borde inferior");
   } else if (m == 0) {
@@ -59,3 +64,139 @@ function verificarBordes(n, m) {
 }
 //aa
 recorrido();
+
+
+function esquinaSupIzq(r, c){
+    let vivas=0, muertas=0;
+    if(myarray[r+1][c] === '.' ){
+        muertas++;
+    }else{
+        vivas++;
+    }
+
+    if(myarray[r+1][c+1] =='.'){
+        muertas++;
+    }else{
+        vivas++;
+    }
+
+    if(myarray[r][c+1] =='.'){
+        muertas++;
+    }else{
+        vivas++;
+    }
+    
+    console.log(`Vivas ${vivas}`);
+    console.log(`Muertas ${muertas}`);
+}
+
+function esquinaSupDer(r, c){
+    let vivas=0, muertas=0;
+    if(myarray[r][c-1] === '.' ){
+        muertas++;
+    }else{
+        vivas++;
+    }
+
+    if(myarray[r+1][c] =='.'){
+        muertas++;
+    }else{
+        vivas++;
+    }
+
+    if(myarray[r+1][c-1] =='.'){
+        muertas++;
+    }else{
+        vivas++;
+    }
+    
+    console.log(`Vivas ${vivas}`);
+    console.log(`Muertas ${muertas}`);
+}
+
+
+function esquinaInfIzq(r, c){
+    let vivas=0, muertas=0;
+    if(myarray[r-1][c] === '.' ){
+        muertas++;
+    }else{
+        vivas++;
+    }
+
+    if(myarray[r-1][c+1] =='.'){
+        muertas++;
+    }else{
+        vivas++;
+    }
+
+    if(myarray[r][c+1] =='.'){
+        muertas++;
+    }else{
+        vivas++;
+    }
+    
+    console.log(`Vivas ${vivas}`);
+    console.log(`Muertas ${muertas}`);
+}
+
+
+function esquinaInfDer(r, c){
+    let vivas=0, muertas=0;
+    if(myarray[r-1][c] === '.' ){
+        muertas++;
+    }else{
+        vivas++;
+    }
+
+    if(myarray[r-1][c-1] =='.'){
+        muertas++;
+    }else{
+        vivas++;
+    }
+
+    if(myarray[r][c-1] =='.'){
+        muertas++;
+    }else{
+        vivas++;
+    }
+    
+    console.log(`Vivas ${vivas}`);
+    console.log(`Muertas ${muertas}`);
+}
+
+
+function borderSup(r, c){
+    let vivas=0, muerta=0;
+    // lado izquierdo
+    if(myarray[r][c-1] == '.')
+        muerta++;
+    else
+        vivas++;
+
+    // lado derecho
+    if( myarray[r][c+1] == '.')
+        muerta++;
+    else
+        vivas++;
+    
+    // lado abajo
+    if( myarray[r+1][c] == '.')    
+        muerta++;
+    else
+        vivas++;
+    
+    // diagonal izquierda
+    if( myarray[r+1][c-1])
+        muerta++;
+    else
+        vivas++;
+    
+    // diagonal derecha
+    if( myarray[r+1][c+1] )
+        muerta++;
+    else
+        vivas++;
+
+    console.log(`vivass ${vivas}`);
+    console.log(`muertas ${muerta}`);
+}
