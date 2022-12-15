@@ -25,6 +25,7 @@ export default class JuegoVida{
         this.siguienteGeneracion[n][m] = this.primeraGeneracion[n][m];
       }
     }
+    return this.primeraGeneracion;
   }
   
   // let this.siguienteGeneracion = [...this.primeraGeneracion];
