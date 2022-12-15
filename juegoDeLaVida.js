@@ -1,425 +1,440 @@
-// Recibir fila y columnas a través de la consola
-const fila = process.argv[2];
-const columnas = process.argv[3];
+// Recibir this.fila y this.columnas a través de la consola
+export default class JuegoVida{
 
-const primeraGeneracion = [];
-const siguienteGeneracion = [];
+  constructor(fila,columnas){
+    this.fila = fila;
+    this.columnas = columnas;
+    this.primeraGeneracion = [];
+    this.siguienteGeneracion = [];
+  }    
 
-for (let n = 0; n < fila; n++) {
-  primeraGeneracion[n] = [];
-  siguienteGeneracion[n] = [];
-  for (let m = 0; m < columnas; m++) {
-    primeraGeneracion[n][m] = llenarCampos();
-    siguienteGeneracion[n][m] = primeraGeneracion[n][m];
+  
+  llenarCampos() {
+    const valor = Math.round(Math.random());
+    if (valor === 1) return '*';
+    return '.';
   }
-}
 
-function llenarCampos() {
-  const valor = Math.round(Math.random());
-  if (valor === 1) return "*";
-  return ".";
-}
+  crearTablero(){
 
-// let siguienteGeneracion = [...primeraGeneracion];
-
-// recorrido del array
-function recorrido() {
-  for (let n = 0; n < fila; n++) {
-    for (let m = 0; m < columnas; m++) {
-      ubicacion(n, m);
+    for (let n = 0; n < this.fila; n++) {
+      this.primeraGeneracion[n] = [];
+      this.siguienteGeneracion[n] = [];
+      for (let m = 0; m < this.columnas; m++) {
+        this.primeraGeneracion[n][m] = this.llenarCampos();
+        this.siguienteGeneracion[n][m] = this.primeraGeneracion[n][m];
+      }
     }
   }
-}
-
-function estadoActual(n,m){
-  if(primeraGeneracion[n][m] === '.'){
-    return false
-  }else { return true}
-}
-
-function ubicacion(n, m) {
-  if (n === 0 && m === 0) {
-    esquinaSupIzq(n, m);
-  } else if (n === 0 && m === columnas - 1) {
-    esquinaSupDer(n, m);
-  } else if (n === fila - 1 && m === 0) {
-    esquinaInfIzq(n, m);
-  } else if (n === fila - 1 && m === columnas - 1) {
-    esquinaInfDer(n, m);
-  } else if (n === 0) {
-    borderSup(n, m);
-  } else if (n === fila - 1) {
-    borderInf(n, m);
-  } else if (m === 0) {
-    borderIzq(n, m);
-  } else if (m === columnas - 1) {
-    borderDer(n, m);
-  } else {
-    centro(n, m);
+  
+  // let this.siguienteGeneracion = [...this.primeraGeneracion];
+  
+  // recorrido del array
+  recorrido() {
+    for (let n = 0; n < this.fila; n++) {
+      for (let m = 0; m < this.columnas; m++) {
+        this.ubicacion(n, m);
+      }
+    }
   }
-}
-
-function creacionSiguienteGeneracion(vivas,muertas,r,c) {
-  const estado = estadoActual(r,c)
-
-  //Condición 1 y 2
-  if ((estado === true) && (vivas < 2 || vivas >3)) {
-    siguienteGeneracion[r][c] = '.'
+  
+  estadoActual(n,m){
+    if(this.primeraGeneracion[n][m] === '.'){
+      return false
+    }else { return true}
+  }
+  
+  ubicacion(n, m) {
+    if (n === 0 && m === 0) {
+      this.esquinaSupIzq(n, m);
+    } else if (n === 0 && m === this.columnas - 1) {
+      this.esquinaSupDer(n, m);
+    } else if (n === this.fila - 1 && m === 0) {
+      this.esquinaInfIzq(n, m);
+    } else if (n === this.fila - 1 && m === this.columnas - 1) {
+      this.esquinaInfDer(n, m);
+    } else if (n === 0) {
+      this.borderSup(n, m);
+    } else if (n === this.fila - 1) {
+      this.borderInf(n, m);
+    } else if (m === 0) {
+      this.borderIzq(n, m);
+    } else if (m === this.columnas - 1) {
+      this.borderDer(n, m);
+    } else {
+      this.centro(n, m);
+    }
+  }
+  
+  creacionSiguienteGeneracion(vivas,muertas,r,c) {
+    const estado = this.estadoActual(r,c)
+  
+    //Condición 1 y 2
+    if ((estado === true) && (vivas < 2 || vivas >3)) {
+      this.siguienteGeneracion[r][c] = '.'
+    } 
+    // Condición 3
+    else if ((estado === true) && (vivas === 2 || vivas === 3)){
+      this.siguienteGeneracion[r][c] = '*'
+    }
+    //Condicion 4
+    else if ((estado === false) && (vivas === 3)){
+      this.siguienteGeneracion[r][c] = '*'
+    }
   } 
-  // Condición 3
-  else if ((estado === true) && (vivas === 2 || vivas === 3)){
-    siguienteGeneracion[r][c] = '*'
+  
+  
+  
+  esquinaSupIzq(r, c) {
+    let vivas = 0;
+    let muertas = 0;
+    if (this.primeraGeneracion[r + 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    if (this.primeraGeneracion[r + 1][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    if (this.primeraGeneracion[r][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    this.creacionSiguienteGeneracion(vivas,muertas,r,c);
+  
+    // console.log(`Vivas ${vivas}`);
+    // console.log(`Muertas ${muertas}`);
   }
-  //Condicion 4
-  else if ((estado === false) && (vivas === 3)){
-    siguienteGeneracion[r][c] = '*'
+  
+  esquinaSupDer(r, c) {
+    let vivas = 0;
+    let muertas = 0;
+    if (this.primeraGeneracion[r][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    if (this.primeraGeneracion[r + 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    if (this.primeraGeneracion[r + 1][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    this.creacionSiguienteGeneracion(vivas,muertas,r,c);
+    // console.log(`Vivas ${vivas}`);
+    // console.log(`Muertas ${muertas}`);
   }
-} 
-
-recorrido();
-
-function esquinaSupIzq(r, c) {
-  let vivas = 0;
-  let muertas = 0;
-  if (primeraGeneracion[r + 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
+  
+  esquinaInfIzq(r, c) {
+    let vivas = 0;
+    let muertas = 0;
+    if (this.primeraGeneracion[r - 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    if (this.primeraGeneracion[r - 1][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    if (this.primeraGeneracion[r][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    this.creacionSiguienteGeneracion(vivas,muertas,r,c);
+    // console.log(`Vivas ${vivas}`);
+    // console.log(`Muertas ${muertas}`);
+  }
+  
+  esquinaInfDer(r, c) {
+    let vivas = 0;
+    let muertas = 0;
+    if (this.primeraGeneracion[r - 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    if (this.primeraGeneracion[r - 1][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    if (this.primeraGeneracion[r][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    this.creacionSiguienteGeneracion(vivas,muertas,r,c);
+    // console.log(`Vivas ${vivas}`);
+    // console.log(`Muertas ${muertas}`);
+  }
+  
+  borderSup(r, c) {
+    let vivas = 0;
+    let muertas = 0;
+    // lado izquierdo
+    if (this.primeraGeneracion[r][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado derecho
+    if (this.primeraGeneracion[r][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado abajo
+    if (this.primeraGeneracion[r + 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // diagonal izquierda
+    if (this.primeraGeneracion[r + 1][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // diagonal derecha
+    if (this.primeraGeneracion[r + 1][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    this.creacionSiguienteGeneracion(vivas,muertas,r,c);
+    // console.log(`vivasssss ${vivas}`);
+    // console.log(`muertassss ${muertas}`);
+  }
+  
+  borderInf(r, c) {
+    let vivas = 0;
+    let muertas = 0;
+    // lado izquierdo
+    if (this.primeraGeneracion[r][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado derecho
+    if (this.primeraGeneracion[r][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado arriba
+    if (this.primeraGeneracion[r - 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // diagonal izquierda
+    if (this.primeraGeneracion[r - 1][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // diagonal derecha
+    if (this.primeraGeneracion[r - 1][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    this.creacionSiguienteGeneracion(vivas,muertas,r,c);
+    // console.log(`vivasssss ${vivas}`);
+    // console.log(`muertassss ${muertas}`);
+  }
+  
+  borderIzq(r, c) {
+    let vivas = 0;
+    let muertas = 0;
+    // lado arriba
+    if (this.primeraGeneracion[r - 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado diagonal arriba
+    if (this.primeraGeneracion[r - 1][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado derecho
+    if (this.primeraGeneracion[r][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // diagonal abajo
+    if (this.primeraGeneracion[r + 1][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado abjo
+    if (this.primeraGeneracion[r + 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    this.creacionSiguienteGeneracion(vivas,muertas,r,c);
+    // console.log(`vivasssss ${vivas}`);
+    // console.log(`muertassss ${muertas}`);
+  }
+  
+  borderDer(r, c) {
+    let vivas = 0;
+    let muertas = 0;
+    // lado arriba
+    if (this.primeraGeneracion[r - 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    //diagonal izquierda arriba
+    if (this.primeraGeneracion[r - 1][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado izauierdo
+    if (this.primeraGeneracion[r][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // diagonal izauierdo abajo
+    if (this.primeraGeneracion[r + 1][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado abjo
+    if (this.primeraGeneracion[r + 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    this.creacionSiguienteGeneracion(vivas,muertas,r,c);
+    // console.log(`vivasssss ${vivas}`);
+    // console.log(`muertassss ${muertas}`);
+  }
+  
+  centro(r, c) {
+    let vivas = 0;
+    let muertas = 0;
+    // lado arriba
+    if (this.primeraGeneracion[r - 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // Diagonal arribal derecha
+    if (this.primeraGeneracion[r - 1][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado derecho
+    if (this.primeraGeneracion[r][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // Diagonal abajo derecho
+    if (this.primeraGeneracion[r + 1][c + 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado abajo
+    if (this.primeraGeneracion[r + 1][c] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // Diagonal abajo izquirda
+    if (this.primeraGeneracion[r + 1][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // lado isquierdo
+    if (this.primeraGeneracion[r][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    // Diagonal arriba izquirda
+    if (this.primeraGeneracion[r - 1][c - 1] === '.') {
+      muertas++;
+    } else {
+      vivas++;
+    }
+  
+    this.creacionSiguienteGeneracion(vivas,muertas,r,c);
+    // console.log(`vivasssss ${vivas}`);
+    // console.log(`muertassss ${muertas}`);
   }
 
-  if (primeraGeneracion[r + 1][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
+  imprimirTableros(){
+    console.log('Primera Generación')
+    console.table(this.primeraGeneracion);
+    console.log('Segunda Generación')
+    console.table(this.siguienteGeneracion);
+
   }
+  
 
-  if (primeraGeneracion[r][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
 
-  creacionSiguienteGeneracion(vivas,muertas,r,c);
-
-  // console.log(`Vivas ${vivas}`);
-  // console.log(`Muertas ${muertas}`);
 }
 
-function esquinaSupDer(r, c) {
-  let vivas = 0;
-  let muertas = 0;
-  if (primeraGeneracion[r][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  if (primeraGeneracion[r + 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  if (primeraGeneracion[r + 1][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  creacionSiguienteGeneracion(vivas,muertas,r,c);
-  // console.log(`Vivas ${vivas}`);
-  // console.log(`Muertas ${muertas}`);
-}
-
-function esquinaInfIzq(r, c) {
-  let vivas = 0;
-  let muertas = 0;
-  if (primeraGeneracion[r - 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  if (primeraGeneracion[r - 1][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  if (primeraGeneracion[r][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  creacionSiguienteGeneracion(vivas,muertas,r,c);
-  // console.log(`Vivas ${vivas}`);
-  // console.log(`Muertas ${muertas}`);
-}
-
-function esquinaInfDer(r, c) {
-  let vivas = 0;
-  let muertas = 0;
-  if (primeraGeneracion[r - 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  if (primeraGeneracion[r - 1][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  if (primeraGeneracion[r][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  creacionSiguienteGeneracion(vivas,muertas,r,c);
-  // console.log(`Vivas ${vivas}`);
-  // console.log(`Muertas ${muertas}`);
-}
-
-function borderSup(r, c) {
-  let vivas = 0;
-  let muertas = 0;
-  // lado izquierdo
-  if (primeraGeneracion[r][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado derecho
-  if (primeraGeneracion[r][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado abajo
-  if (primeraGeneracion[r + 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // diagonal izquierda
-  if (primeraGeneracion[r + 1][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // diagonal derecha
-  if (primeraGeneracion[r + 1][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  creacionSiguienteGeneracion(vivas,muertas,r,c);
-  // console.log(`vivasssss ${vivas}`);
-  // console.log(`muertassss ${muertas}`);
-}
-
-function borderInf(r, c) {
-  let vivas = 0;
-  let muertas = 0;
-  // lado izquierdo
-  if (primeraGeneracion[r][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado derecho
-  if (primeraGeneracion[r][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado arriba
-  if (primeraGeneracion[r - 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // diagonal izquierda
-  if (primeraGeneracion[r - 1][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // diagonal derecha
-  if (primeraGeneracion[r - 1][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  creacionSiguienteGeneracion(vivas,muertas,r,c);
-  // console.log(`vivasssss ${vivas}`);
-  // console.log(`muertassss ${muertas}`);
-}
-
-function borderIzq(r, c) {
-  let vivas = 0;
-  let muertas = 0;
-  // lado arriba
-  if (primeraGeneracion[r - 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado diagonal arriba
-  if (primeraGeneracion[r - 1][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado derecho
-  if (primeraGeneracion[r][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // diagonal abajo
-  if (primeraGeneracion[r + 1][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado abjo
-  if (primeraGeneracion[r + 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  creacionSiguienteGeneracion(vivas,muertas,r,c);
-  // console.log(`vivasssss ${vivas}`);
-  // console.log(`muertassss ${muertas}`);
-}
-
-function borderDer(r, c) {
-  let vivas = 0;
-  let muertas = 0;
-  // lado arriba
-  if (primeraGeneracion[r - 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  //diagonal izquierda arriba
-  if (primeraGeneracion[r - 1][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado izauierdo
-  if (primeraGeneracion[r][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // diagonal izauierdo abajo
-  if (primeraGeneracion[r + 1][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado abjo
-  if (primeraGeneracion[r + 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  creacionSiguienteGeneracion(vivas,muertas,r,c);
-  // console.log(`vivasssss ${vivas}`);
-  // console.log(`muertassss ${muertas}`);
-}
-
-function centro(r, c) {
-  let vivas = 0;
-  let muertas = 0;
-  // lado arriba
-  if (primeraGeneracion[r - 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // Diagonal arribal derecha
-  if (primeraGeneracion[r - 1][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado derecho
-  if (primeraGeneracion[r][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // Diagonal abajo derecho
-  if (primeraGeneracion[r + 1][c + 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado abajo
-  if (primeraGeneracion[r + 1][c] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // Diagonal abajo izquirda
-  if (primeraGeneracion[r + 1][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // lado isquierdo
-  if (primeraGeneracion[r][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  // Diagonal arriba izquirda
-  if (primeraGeneracion[r - 1][c - 1] === ".") {
-    muertas++;
-  } else {
-    vivas++;
-  }
-
-  creacionSiguienteGeneracion(vivas,muertas,r,c);
-  // console.log(`vivasssss ${vivas}`);
-  // console.log(`muertassss ${muertas}`);
-}
-
-console.log('Primera Generación')
-console.table(primeraGeneracion);
-console.log('Segunda Generación')
-console.table(siguienteGeneracion);
