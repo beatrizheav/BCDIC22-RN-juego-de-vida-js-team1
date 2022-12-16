@@ -6,7 +6,7 @@
     "eslint-plugin-n": "^15.6.0",
     "eslint-plugin-promise": "^6.1.1"
   },
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "jest": "^29.3.1"
   },
