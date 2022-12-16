@@ -1,4 +1,4 @@
-import JuegoVida from './juegoDeLaVida.mjs'
+import JuegoVida from './juegoDeLaVida.js'
 
 const fila = process.argv[2]
 const columnas = process.argv[3]

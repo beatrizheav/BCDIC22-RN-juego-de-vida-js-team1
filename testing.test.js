@@ -1,14 +1,22 @@
-import JuegoVida from './juegoDeLaVida.js'
-import testing from './testing.js'
+/* eslint-disable no-undef */
+import JuegoVida from './juegoDeLaVida'
 
-let juego = new JuegoVida(5,5);
-let columnas = juego.columnas;
-let fila = juego.fila;
+const juego = new JuegoVida(5, 6)
+const columnas = juego.columnas
+const filas = juego.fila
+const tablero = juego.crearTablero()
 
-let tablero = juego.crearTablero();
+function tamanoTablero (filas, columnas, tablero) {
+  const dimensionesTablero = [tablero.length, tablero[0].length]
+  if (filas === dimensionesTablero[0] && columnas === dimensionesTablero[1]) {
+    return true
+  } else {
+    // eslint-disable-next-line no-unused-expressions
+    false
+  }
+}
 
-test('La tabla coincide con los parametros', () => {
-const resultado = testing.tamañoTablero(tablero)
-expect(resultado).toBe();
-
-});
+test('El tablero coincide con los parametros', () => {
+  const resultado = tamanoTablero(filas, columnas, tablero)
+  expect(resultado).toBe(true)
+})

@@ -1,6 +1,6 @@
 /* eslint-disable brace-style */
 // Recibir this.fila y this.columnas a través de la consola
-export default class JuegoVida {
+class JuegoVida {
   constructor (fila, columnas) {
     this.fila = fila
     this.columnas = columnas
@@ -430,3 +430,5 @@ export default class JuegoVida {
     console.table(this.siguienteGeneracion)
   }
 }
+
+export default JuegoVida
